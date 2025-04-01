@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.IO;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace FileManagerWPF
 {
@@ -15,46 +16,82 @@ namespace FileManagerWPF
         {
             InitializeComponent();
 
-            // При первом запуске устанавливать HOMEPATH, потом читать и писать в конфиг
+            // TODO: При первом запуске устанавливать HOMEPATH, потом читать и писать в конфиг
             CurrentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            OpenDirectory(CurrentDirectory);
+            ChangeDirectory(CurrentDirectory);
         }
 
-        // Открытие папки - до
-        public void OpenDirectory(string directoryPath)
+        // Смена директории
+        public void ChangeDirectory(string directoryPath)
         {
+            // Очистка содержимого прошлой директории
             if (wrapPanel.Children.Count > 0)
             {
                 wrapPanel.Children.Clear();
             }
 
-            string[] files = GetDirectoryFilesAndDirectories(directoryPath);
-
-            foreach (string file in files)
+            try
             {
-                Button newButton = new Button
+                // Получаем все поддиректории
+                foreach (var dir in Directory.GetDirectories(directoryPath))
                 {
-                    Content = file,
-                    //Width = auto,
-                    Height = 30
-                };
+                    var dirInfo = new DirectoryInfo(dir);
+                    Button dirButton = new Button
+                    {
+                        Style = (Style)FindResource("ButtonFolderStyle"),
+                        Content = dirInfo.Name,
+                        Tag = dir
+                    };
 
-                wrapPanel.Children.Add(newButton);
+                    // Добавляем обработчик клика для входа в директорию
+                    dirButton.Click += (s, e) => ChangeDirectory(dir);
+
+                    wrapPanel.Children.Add(dirButton);
+                }
+
+                // Получаем все файлы
+                foreach (var file in Directory.GetFiles(directoryPath))
+                {
+                    var fileInfo = new FileInfo(file);
+                    Button fileButton = new Button
+                    {
+                        Style = (Style)FindResource("ButtonFileStyle"),
+                        Content = fileInfo.Name,
+                        Tag = file
+                    };
+
+                    // Добавляем обработчик клика для файла
+                    fileButton.Click += (s, e) => OpenFile(file);
+
+                    wrapPanel.Children.Add(fileButton);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("Нет доступа к директории");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                MessageBox.Show("Директория не найдена");
             }
         }
 
-        public string[] GetDirectoryFilesAndDirectories(string directoryPath)
+        // Метод для открытия файла
+        private void OpenFile(string filePath)
         {
-            string[] directories = Directory.GetDirectories(directoryPath);
-            string[] files = Directory.GetFiles(directoryPath);
-
-            string[] directoriesAndFiles = new string[directories.Length + files.Length];
-
-            directories.CopyTo(directoriesAndFiles, 0);
-            files.CopyTo(directoriesAndFiles, directories.Length);
-
-            return directoriesAndFiles;
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
+            }
         }
     }
 }

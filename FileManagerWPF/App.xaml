@@ -4,6 +4,38 @@
              xmlns:local="clr-namespace:FileManagerWPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="ButtonFolderStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="/folder.png" 
+                                   Height="44" 
+                                   Width="44"
+                                   Stretch="Fill"/>
+                            <Label HorizontalAlignment="Center"
+                                   Content="{TemplateBinding Content}"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ButtonFileStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="/file.png" 
+                                   Height="44" 
+                                   Width="44"
+                                   Stretch="Fill"/>
+                            <Label HorizontalAlignment="Center"
+                                   Content="{TemplateBinding Content}"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
