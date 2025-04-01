@@ -12,6 +12,15 @@ namespace FileManagerWPF
     {
         public string CurrentDirectory;
 
+        /* 
+         * LimitedArray позволяет хранить 10 последних путей, удаляя пути,
+         * которые хранились более 10 запросов назад. 
+         */
+        private LimitedArray<string> _directoriesPath;
+
+        // Индекс для отслеживания в _directoriesPath
+        private int _currentDirectoryIndex;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,15 +28,25 @@ namespace FileManagerWPF
             // TODO: При первом запуске устанавливать HOMEPATH, потом читать и писать в конфиг
             CurrentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            ChangeDirectory(CurrentDirectory);
+            _directoriesPath = new LimitedArray<string>(10);
+
+            ChangeDirectory(CurrentDirectory, false);
+
+            _currentDirectoryIndex = 0;
         }
 
         // Смена директории
-        public void ChangeDirectory(string directoryPath)
+        public void ChangeDirectory(string directoryPath, bool isSwitchedByHistory)
         {
             // Обновление текущей директории
-            UpdateCurrentDirectory(directoryPath);
+            UpdateCurrentDirectory(directoryPath, isSwitchedByHistory);
 
+            LoadDirectory(directoryPath);
+        }
+
+        // Загрузка содержимого директории
+        private void LoadDirectory(string directoryPath)
+        {
             // Очистка содержимого прошлой директории
             if (wrapPanel.Children.Count > 0)
             {
@@ -48,7 +67,7 @@ namespace FileManagerWPF
                     };
 
                     // Добавляем обработчик клика для входа в директорию
-                    dirButton.Click += (s, e) => ChangeDirectory(dir);
+                    dirButton.Click += (s, e) => ChangeDirectory(dir, false);
 
                     wrapPanel.Children.Add(dirButton);
                 }
@@ -98,10 +117,69 @@ namespace FileManagerWPF
         }
 
         // Обновление текущей директории в поле "адресной строки"
-        private void UpdateCurrentDirectory(string newDirectoryPath)
+        private void UpdateCurrentDirectory(string newDirectoryPath, bool isSwitchedByHistory)
         {
             CurrentDirectory = newDirectoryPath;
             TextBoxCurrentPath.Text = CurrentDirectory;
+
+            if ( !isSwitchedByHistory )
+            {
+                // Добавление в очередь путей нового
+                _directoriesPath.Add(CurrentDirectory);
+
+                if (_currentDirectoryIndex < 9)
+                {
+                    _currentDirectoryIndex++;
+                }
+            }
+            //else
+        }
+
+        private void ButtonBack_Click(object sender, RoutedEventArgs e)
+        {
+            if ( _currentDirectoryIndex == 0 )
+            {
+                return;
+            }
+
+            _currentDirectoryIndex--;
+
+            ChangeDirectory(_directoriesPath.Get(_currentDirectoryIndex), true);
+
+            TextBoxCurrentPath.Text = CurrentDirectory;
+        }
+
+        private void ButtonForward_Click(object sender, RoutedEventArgs e)
+        {
+            if ( _currentDirectoryIndex >= _directoriesPath.Count - 1 )
+            {
+                return;
+            }
+
+            _currentDirectoryIndex++;
+
+            ChangeDirectory(_directoriesPath.Get(_currentDirectoryIndex), true);
+
+            TextBoxCurrentPath.Text = CurrentDirectory;
+        }
+
+        private void ButtonDirectoriesHistory_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonGoUp_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonCMD_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                WorkingDirectory = CurrentDirectory,
+                FileName = "cmd.exe"
+            });
         }
     }
 }

@@ -42,9 +42,9 @@
         <!-- Изменяет пропорции древовидного представления и просмотра текущей директории -->
         <GridSplitter Grid.Column="1" Grid.Row="1"
               ShowsPreview="False"
-              Width="3"
+              Width="5"
               HorizontalAlignment="Center"
-              VerticalAlignment="Stretch" />
+              VerticalAlignment="Stretch" Cursor="SizeWE" />
 
         <!-- Кнопки взаимодействия -->
         <StackPanel Grid.Column="0" Grid.Row="0"
@@ -53,19 +53,19 @@
                     VerticalAlignment="Center">
             <Button x:Name="ButtonBack"
                     Style="{StaticResource ButtonInteractionStyle}"
-                    Content="&#xE72B;" />
+                    Content="&#xE72B;" Click="ButtonBack_Click" />
             <Button x:Name="ButtonForward"
                     Style="{StaticResource ButtonInteractionStyle}"
-                    Content="&#xE72A;" />
+                    Content="&#xE72A;" Click="ButtonForward_Click" />
             <Button x:Name="ButtonDirectoriesHistory"
                     Style="{StaticResource ButtonInteractionStyle}"
-                    Content="&#xE70D;" />
+                    Content="&#xE70D;" Click="ButtonDirectoriesHistory_Click" />
             <Button x:Name="ButtonGoUp" 
                     Style="{StaticResource ButtonInteractionStyle}"
-                    Content="&#xE74A;" />
+                    Content="&#xE74A;" Click="ButtonGoUp_Click" />
             <Button x:Name="ButtonCMD"
                     Style="{StaticResource ButtonInteractionStyle}"
-                    Content="&#xE756;" />
+                    Content="&#xE756;" Click="ButtonCMD_Click" />
         </StackPanel>
 
         <!-- Древовидное представление хранилища -->
