@@ -4,38 +4,149 @@
              xmlns:local="clr-namespace:FileManagerWPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style x:Key="ButtonFolderStyle" TargetType="Button">
+        <!-- Общие ресурсы для стилей -->
+        <Style x:Key="BaseFileManagerButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <!-- Стиль кнопки с папкой -->
+        <Style x:Key="ButtonFolderStyle" BasedOn="{StaticResource BaseFileManagerButtonStyle}" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="/folder.png" 
-                                   Height="44" 
-                                   Width="44"
-                                   Stretch="Fill"/>
-                            <Label HorizontalAlignment="Center"
-                                   Content="{TemplateBinding Content}"/>
-                        </StackPanel>
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <StackPanel Orientation="Vertical"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <Image Source="/folder.png" 
+                                       Height="44" 
+                                       Width="44"
+                                       Stretch="Uniform"/>
+
+                                <TextBlock x:Name="fileNameText"
+                                           Text="{TemplateBinding Content}"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxWidth="90"
+                                           Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Подсветка при наведении -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#100078D4"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#300078D4"/>
+                                <Setter TargetName="fileNameText" Property="Foreground" Value="#0078D4"/>
+                            </Trigger>
+
+                            <!-- Эффект нажатия -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#300078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="ButtonFileStyle" TargetType="Button">
+        <!-- Стиль кнопки с файлом -->
+        <Style x:Key="ButtonFileStyle" BasedOn="{StaticResource BaseFileManagerButtonStyle}" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="/file.png" 
-                                   Height="44" 
-                                   Width="44"
-                                   Stretch="Fill"/>
-                            <Label HorizontalAlignment="Center"
-                                   Content="{TemplateBinding Content}"/>
-                        </StackPanel>
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <StackPanel Orientation="Vertical"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <Image Source="/file.png" 
+                                       Height="44" 
+                                       Width="44"
+                                       Stretch="Uniform"/>
+
+                                <TextBlock x:Name="fileNameText"
+                                           Text="{TemplateBinding Content}"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxWidth="90"
+                                           Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Подсветка при наведении -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#100078D4"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#300078D4"/>
+                                <Setter TargetName="fileNameText" Property="Foreground" Value="#0078D4"/>
+                            </Trigger>
+
+                            <!-- Эффект нажатия -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#300078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Стиль кнопки взаимодействия -->
+        <Style x:Key="ButtonInteractionStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="4">
+                            <ContentPresenter x:Name="contentPresenter" 
+                                              Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- При наведении меняем Foreground на синий (#81d4ef) -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#81d4ef" />
+                            </Trigger>
+
+                            <!-- При нажатии добавляем небольшой сдвиг для эффекта нажатия -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="contentPresenter" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform X="0.5" Y="0.5" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
     </Application.Resources>
 </Application>

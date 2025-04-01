@@ -5,23 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileManagerWPF"
         mc:Ignorable="d"
-        Title="Файловый менеджер" Height="450" Width="800">
+        Title="Файловый менеджер" Height="450" Width="800"
+        FontFamily="Arial"
+        FontSize="14">
+    
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="3*" MinWidth="180" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10*" MinWidth="75" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Панель инструментов с закругленным углом -->
+        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"
+                Background="#eaeaea"
+                Padding="5"
+                CornerRadius="0 0 0 10">
 
-        <GridSplitter Grid.Column="1"
-                      ShowsPreview="False"
-                      Width="3"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Stretch" />
+        </Border>
+        
+        <!-- Панель для поля "адресной строки" -->
+        <Border Grid.Column="2" Grid.Row="0"
+                Background="#C4C4C4"
+                Margin="100, 5, 100, 5"
+                CornerRadius="5">
+            <TextBox x:Name="TextBoxCurrentPath"
+                     Text=""
+                     Background="Transparent" 
+                     BorderBrush="Transparent" />
+        </Border>
+        
+        <!-- Изменяет пропорции древовидного представления и просмотра текущей директории -->
+        <GridSplitter Grid.Column="1" Grid.Row="1"
+              ShowsPreview="False"
+              Width="3"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Stretch" />
 
-        <ScrollViewer Grid.Column="2"
+        <!-- Кнопки взаимодействия -->
+        <StackPanel Grid.Column="0" Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Button x:Name="ButtonBack"
+                    Style="{StaticResource ButtonInteractionStyle}"
+                    Content="&#xE72B;" />
+            <Button x:Name="ButtonForward"
+                    Style="{StaticResource ButtonInteractionStyle}"
+                    Content="&#xE72A;" />
+            <Button x:Name="ButtonDirectoriesHistory"
+                    Style="{StaticResource ButtonInteractionStyle}"
+                    Content="&#xE70D;" />
+            <Button x:Name="ButtonGoUp" 
+                    Style="{StaticResource ButtonInteractionStyle}"
+                    Content="&#xE74A;" />
+            <Button x:Name="ButtonCMD"
+                    Style="{StaticResource ButtonInteractionStyle}"
+                    Content="&#xE756;" />
+        </StackPanel>
+
+        <!-- Древовидное представление хранилища -->
+        <ScrollViewer Grid.Column="0" Grid.Row="1"
+              HorizontalScrollBarVisibility="Auto"
+              VerticalScrollBarVisibility="Auto">
+        </ScrollViewer>
+
+        <!-- Просмотр текущей директории -->
+        <ScrollViewer Grid.Column="2" Grid.Row="1"
                       HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
+                      VerticalScrollBarVisibility="Auto"
+                      Foreground="#eaeaea">
             <WrapPanel x:Name="wrapPanel" Grid.Column="2">
                 <WrapPanel.Resources>
                     <Style TargetType="{x:Type Button}">
@@ -31,5 +88,6 @@
 
             </WrapPanel>
         </ScrollViewer>
+
     </Grid>
 </Window>

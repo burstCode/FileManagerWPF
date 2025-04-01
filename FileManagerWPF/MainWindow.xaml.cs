@@ -10,7 +10,7 @@ namespace FileManagerWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string CurrentDirectory;
+        public string CurrentDirectory;
 
         public MainWindow()
         {
@@ -25,6 +25,9 @@ namespace FileManagerWPF
         // Смена директории
         public void ChangeDirectory(string directoryPath)
         {
+            // Обновление текущей директории
+            UpdateCurrentDirectory(directoryPath);
+
             // Очистка содержимого прошлой директории
             if (wrapPanel.Children.Count > 0)
             {
@@ -92,6 +95,13 @@ namespace FileManagerWPF
             {
                 MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
             }
+        }
+
+        // Обновление текущей директории в поле "адресной строки"
+        private void UpdateCurrentDirectory(string newDirectoryPath)
+        {
+            CurrentDirectory = newDirectoryPath;
+            TextBoxCurrentPath.Text = CurrentDirectory;
         }
     }
 }
