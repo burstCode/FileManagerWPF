@@ -10,13 +10,14 @@ namespace FileManagerWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string CurrentDirectory;
-
         /* 
          * LimitedArray позволяет хранить 10 последних путей, удаляя пути,
          * которые хранились более 10 запросов назад. 
          */
         private LimitedArray<string> _directoriesPath;
+
+        // Путь к текущей директории
+        public string CurrentDirectory;
 
         // Индекс для отслеживания в _directoriesPath
         private int _currentDirectoryIndex;
@@ -25,21 +26,23 @@ namespace FileManagerWPF
         {
             InitializeComponent();
 
-            // TODO: При первом запуске устанавливать HOMEPATH, потом читать и писать в конфиг
-            CurrentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
             _directoriesPath = new LimitedArray<string>(10);
+            CurrentDirectory = "";
+            _currentDirectoryIndex = -1;
 
-            ChangeDirectory(CurrentDirectory, false);
-
-            _currentDirectoryIndex = 0;
+            ChangeDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), false);
         }
 
         // Смена директории
-        public void ChangeDirectory(string directoryPath, bool isSwitchedByHistory)
+        public void ChangeDirectory(string directoryPath, bool isNavigatingHistory)
         {
+            if (CurrentDirectory == directoryPath)
+            {
+                return;
+            }
+
             // Обновление текущей директории
-            UpdateCurrentDirectory(directoryPath, isSwitchedByHistory);
+            UpdateCurrentDirectory(directoryPath, isNavigatingHistory);
 
             LoadDirectory(directoryPath);
         }
@@ -116,23 +119,30 @@ namespace FileManagerWPF
             }
         }
 
-        // Обновление текущей директории в поле "адресной строки"
-        private void UpdateCurrentDirectory(string newDirectoryPath, bool isSwitchedByHistory)
+        // Обновление текущей директории в поле "адресной строки" и обновление истории
+        private void UpdateCurrentDirectory(string newDirectoryPath, bool isNavigatingHistory)
         {
-            CurrentDirectory = newDirectoryPath;
-            TextBoxCurrentPath.Text = CurrentDirectory;
-
-            if ( !isSwitchedByHistory )
+            // Если в произвольном месте истории директорий мы переходим в отличающуюся
+            // от следующей в истории, то очищаем историю после текущей директории
+            if ( !isNavigatingHistory )
             {
-                // Добавление в очередь путей нового
-                _directoriesPath.Add(CurrentDirectory);
-
-                if (_currentDirectoryIndex < 9)
+                // Если это не навигация по истории, обрабатываем как новый путь
+                if (_currentDirectoryIndex != -1 && _currentDirectoryIndex < _directoriesPath.Count - 1)
                 {
-                    _currentDirectoryIndex++;
+                    // Если мы не в конце истории, удаляем всё после текущего индекса
+                    _directoriesPath.ClearAfterIndex(_currentDirectoryIndex);
+                }
+
+                // Добавляем новый путь только если он отличается от текущего
+                if (_directoriesPath.Count == 0 || _directoriesPath.Get(_currentDirectoryIndex) != newDirectoryPath)
+                {
+                    _directoriesPath.Add(newDirectoryPath);
+                    _currentDirectoryIndex = _directoriesPath.Count - 1;
                 }
             }
-            //else
+
+            CurrentDirectory = newDirectoryPath;
+            TextBoxCurrentPath.Text = CurrentDirectory;
         }
 
         private void ButtonBack_Click(object sender, RoutedEventArgs e)
