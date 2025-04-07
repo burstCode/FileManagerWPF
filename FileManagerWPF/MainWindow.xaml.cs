@@ -175,12 +175,11 @@ namespace FileManagerWPF
 
         private void ButtonDirectoriesHistory_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void ButtonGoUp_Click(object sender, RoutedEventArgs e)
         {
-
+            ChangeDirectory(Directory.GetParent(CurrentDirectory).FullName, false);
         }
 
         private void ButtonCMD_Click(object sender, RoutedEventArgs e)
