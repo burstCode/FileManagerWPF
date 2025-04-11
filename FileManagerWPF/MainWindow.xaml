@@ -37,7 +37,7 @@
                      Style="{StaticResource TextBoxCurrentPath}" 
                      KeyDown="TextBoxCurrentPath_KeyDown" />
         </Border>
-        
+
         <!-- Изменяет пропорции древовидного представления и просмотра текущей директории -->
         <GridSplitter Grid.Column="1" Grid.Row="1"
               ShowsPreview="False"
@@ -68,17 +68,36 @@
         </StackPanel>
 
         <!-- Древовидное представление хранилища -->
-        <ScrollViewer Grid.Column="0" Grid.Row="1"
-              HorizontalScrollBarVisibility="Auto"
-              VerticalScrollBarVisibility="Auto">
-        </ScrollViewer>
+        <TreeView x:Name="DirectoryTreeView" 
+                  Grid.Column="0" 
+                  Grid.Row="1"
+                  SelectedItemChanged="DirectoryTreeView_SelectedItemChanged"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  ScrollViewer.CanContentScroll="True">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Margin="0,0,5,0"
+                       Source="{Binding Icon}"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="False"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
 
         <!-- Просмотр текущей директории -->
         <ScrollViewer Grid.Column="2" Grid.Row="1"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
                       Foreground="#eaeaea">
-            <WrapPanel x:Name="wrapPanel" Grid.Column="2">
+
+            <WrapPanel x:Name="wrapPanel" Grid.Column="2" Grid.Row="1">
                 <WrapPanel.Resources>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Margin" Value="5, 5, 0, 0" />

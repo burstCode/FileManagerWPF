@@ -49,7 +49,7 @@
 
                                 <!-- Иконка -->
                                 <Image Grid.Row="0"
-                                       Source="/folder.png"
+                                       Source="/Images/folder.png"
                                        Height="44"
                                        Width="44"
                                        Stretch="Uniform"
@@ -123,7 +123,7 @@
 
                                 <!-- Иконка -->
                                 <Image Grid.Row="0"
-                                       Source="/file.png"
+                                       Source="/Images/file.png"
                                        Height="44"
                                        Width="44"
                                        Stretch="Uniform"
@@ -197,7 +197,7 @@
 
                                 <!-- Иконка -->
                                 <Image Grid.Row="0"
-                                       Source="/disk.png"
+                                       Source="/Images/disk.png"
                                        Height="44"
                                        Width="44"
                                        Stretch="Uniform"

@@ -15,9 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="disk.png" />
-    <Resource Include="file.png" />
-    <Resource Include="folder.png" />
+    <Resource Include="Images\disk.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\file.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\folder.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
