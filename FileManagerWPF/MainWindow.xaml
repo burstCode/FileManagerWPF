@@ -33,7 +33,9 @@
                 Background="#C4C4C4"
                 Margin="100, 5, 100, 5"
                 CornerRadius="5">
-            <TextBox x:Name="TextBoxCurrentPath" Style="{StaticResource TextBoxCurrentPath}" />
+            <TextBox x:Name="TextBoxCurrentPath" 
+                     Style="{StaticResource TextBoxCurrentPath}" 
+                     KeyDown="TextBoxCurrentPath_KeyDown" />
         </Border>
         
         <!-- Изменяет пропорции древовидного представления и просмотра текущей директории -->

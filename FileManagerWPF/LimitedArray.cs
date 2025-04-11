@@ -37,6 +37,11 @@ namespace FileManagerWPF
 
         public bool IsFull => _items.Count >= _size;
 
+        public int IndexOf(T item)
+        {
+            return _items.IndexOf(item);
+        }
+
         // Очистка элементов после индекса
         public void ClearAfterIndex(int index)
         {

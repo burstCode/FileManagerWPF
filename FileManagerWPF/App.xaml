@@ -4,21 +4,35 @@
              xmlns:local="clr-namespace:FileManagerWPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!-- Общие ресурсы для стилей -->
-        <Style x:Key="BaseFileManagerButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="Height" Value="100"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Cursor" Value="Hand"/>
+        <!-- Обновленный базовый стиль -->
+        <Style x:Key="BaseFileManagerButtonStyle"
+                TargetType="Button">
+            <Setter Property="Width"
+                    Value="100"/>
+            <Setter Property="Height"
+                    Value="90"/>
+            <Setter Property="Margin"
+                    Value="5"/>
+            <Setter Property="Padding"
+                    Value="5"/>
+            <Setter Property="Background"
+                    Value="Transparent"/>
+            <Setter Property="BorderBrush"
+                    Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
+            <Setter Property="ToolTipService.ShowOnDisabled"
+                    Value="True"/>
         </Style>
 
-        <!-- Стиль кнопки с папкой -->
-        <Style x:Key="ButtonFolderStyle" BasedOn="{StaticResource BaseFileManagerButtonStyle}" TargetType="Button">
+        <!-- Обновленный стиль для папок -->
+        <Style x:Key="ButtonFolderStyle"
+                BasedOn="{StaticResource BaseFileManagerButtonStyle}"
+                TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -27,35 +41,61 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="4">
-                            <StackPanel Orientation="Vertical"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                <Image Source="/folder.png" 
-                                       Height="44" 
-                                       Width="44"
-                                       Stretch="Uniform"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock x:Name="fileNameText"
+                                <!-- Иконка -->
+                                <Image Grid.Row="0"
+                                       Source="/folder.png"
+                                       Height="44"
+                                       Width="44"
+                                       Stretch="Uniform"
+                                       HorizontalAlignment="Center"/>
+
+                                <!-- Название -->
+                                <TextBlock Grid.Row="1"
+                                           x:Name="fileNameText"
                                            Text="{TemplateBinding Content}"
                                            HorizontalAlignment="Center"
-                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
                                            TextTrimming="CharacterEllipsis"
                                            MaxWidth="90"
-                                           Margin="0,5,0,0"/>
-                            </StackPanel>
+                                           Margin="0,5,0,0"
+                                           TextWrapping="NoWrap">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Visibility="Collapsed">
+                                            <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                        </TextBlock>
+                            </Grid>
                         </Border>
 
                         <ControlTemplate.Triggers>
-                            <!-- Подсветка при наведении -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#100078D4"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#300078D4"/>
-                                <Setter TargetName="fileNameText" Property="Foreground" Value="#0078D4"/>
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#100078D4"/>
+                                <Setter TargetName="border"
+                                        Property="BorderBrush"
+                                        Value="#300078D4"/>
+                                <Setter TargetName="fileNameText"
+                                        Property="Foreground"
+                                        Value="#0078D4"/>
+                                <!-- Показываем ToolTip только при наведении -->
+                                <Setter TargetName="fileNameText"
+                                        Property="ToolTip.Visibility"
+                                        Value="Visible"/>
                             </Trigger>
-
-                            <!-- Эффект нажатия -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#300078D4"/>
+                            <Trigger Property="IsPressed"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#300078D4"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -63,8 +103,10 @@
             </Setter>
         </Style>
 
-        <!-- Стиль кнопки с файлом -->
-        <Style x:Key="ButtonFileStyle" BasedOn="{StaticResource BaseFileManagerButtonStyle}" TargetType="Button">
+        <!-- Обновленный стиль для файлов -->
+        <Style x:Key="ButtonFileStyle"
+                BasedOn="{StaticResource BaseFileManagerButtonStyle}"
+                TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -73,35 +115,135 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="4">
-                            <StackPanel Orientation="Vertical"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                <Image Source="/file.png" 
-                                       Height="44" 
-                                       Width="44"
-                                       Stretch="Uniform"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock x:Name="fileNameText"
+                                <!-- Иконка -->
+                                <Image Grid.Row="0"
+                                       Source="/file.png"
+                                       Height="44"
+                                       Width="44"
+                                       Stretch="Uniform"
+                                       HorizontalAlignment="Center"/>
+
+                                <!-- Название -->
+                                <TextBlock Grid.Row="1"
+                                           x:Name="fileNameText"
                                            Text="{TemplateBinding Content}"
                                            HorizontalAlignment="Center"
-                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
                                            TextTrimming="CharacterEllipsis"
                                            MaxWidth="90"
-                                           Margin="0,5,0,0"/>
-                            </StackPanel>
+                                           Margin="0,5,0,0"
+                                           TextWrapping="NoWrap">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Visibility="Collapsed">
+                                            <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                        </TextBlock>
+                            </Grid>
                         </Border>
 
                         <ControlTemplate.Triggers>
-                            <!-- Подсветка при наведении -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#100078D4"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#300078D4"/>
-                                <Setter TargetName="fileNameText" Property="Foreground" Value="#0078D4"/>
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#100078D4"/>
+                                <Setter TargetName="border"
+                                        Property="BorderBrush"
+                                        Value="#300078D4"/>
+                                <Setter TargetName="fileNameText"
+                                        Property="Foreground"
+                                        Value="#0078D4"/>
+                                <!-- Показываем ToolTip только при наведении -->
+                                <Setter TargetName="fileNameText"
+                                        Property="ToolTip.Visibility"
+                                        Value="Visible"/>
                             </Trigger>
+                            <Trigger Property="IsPressed"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#300078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-                            <!-- Эффект нажатия -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#300078D4"/>
+        <!-- Обновленный стиль для файлов -->
+        <Style x:Key="ButtonDriveStyle"
+                BasedOn="{StaticResource BaseFileManagerButtonStyle}"
+                TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Иконка -->
+                                <Image Grid.Row="0"
+                                       Source="/disk.png"
+                                       Height="44"
+                                       Width="44"
+                                       Stretch="Uniform"
+                                       HorizontalAlignment="Center"/>
+
+                                <!-- Название -->
+                                <TextBlock Grid.Row="1"
+                                           x:Name="driveNameText"
+                                           Text="{TemplateBinding Content}"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxWidth="90"
+                                           Margin="0,5,0,0"
+                                           TextWrapping="NoWrap">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Visibility="Collapsed">
+                                            <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                        </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#100078D4"/>
+                                <Setter TargetName="border"
+                                        Property="BorderBrush"
+                                        Value="#300078D4"/>
+                                <Setter TargetName="driveNameText"
+                                        Property="Foreground"
+                                        Value="#0078D4"/>
+                                <!-- Показываем ToolTip только при наведении -->
+                                <Setter TargetName="driveNameText"
+                                        Property="ToolTip.Visibility"
+                                        Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                    Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="#300078D4"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -110,57 +252,81 @@
         </Style>
 
         <!-- Стиль кнопки взаимодействия -->
-        <Style x:Key="ButtonInteractionStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="8,4" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Cursor" Value="Hand" />
+        <Style x:Key="ButtonInteractionStyle"
+                TargetType="Button">
+            <Setter Property="FontFamily"
+                    Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize"
+                    Value="18"/>
+            <Setter Property="Background"
+                    Value="Transparent"/>
+            <Setter Property="BorderBrush"
+                    Value="Transparent"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="Padding"
+                    Value="8,4"/>
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border CornerRadius="4">
-                            <ContentPresenter x:Name="contentPresenter" 
+                            <ContentPresenter x:Name="contentPresenter"
                                               Content="{TemplateBinding Content}"
                                               Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <!-- При наведении меняем Foreground на синий (#81d4ef) -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="#81d4ef" />
+                            <Trigger Property="IsMouseOver"
+                                    Value="True">
+                                <Setter Property="Foreground"
+                                        Value="#81d4ef"/>
                             </Trigger>
 
                             <!-- При нажатии добавляем небольшой сдвиг для эффекта нажатия -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="contentPresenter" Property="RenderTransform">
+                            <Trigger Property="IsPressed"
+                                    Value="True">
+                                <Setter TargetName="contentPresenter"
+                                        Property="RenderTransform">
                                     <Setter.Value>
-                                        <TranslateTransform X="1" Y="1" />
+                                        <TranslateTransform X="1"
+                                                Y="1"/>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
                             <!-- Отключаем кнопку (делаем полупрозрачной) -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
+                            <Trigger Property="IsEnabled"
+                                    Value="False">
+                                <Setter Property="Opacity"
+                                        Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Стиль текстового поля для отключения обводки при наведении -->
-        <Style x:Key="TextBoxCurrentPath" TargetType="TextBox">
-            <Setter Property="Text" Value="" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
+        <Style x:Key="TextBoxCurrentPath"
+                TargetType="TextBox">
+            <Setter Property="Text"
+                    Value=""/>
+            <Setter Property="TextAlignment"
+                    Value="Center"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="BorderBrush"
+                    Value="Transparent"/>
+            <Setter Property="Background"
+                    Value="Transparent"/>
+            <Setter Property="BorderBrush"
+                    Value="Transparent"/>
         </Style>
-        
+
     </Application.Resources>
 </Application>
